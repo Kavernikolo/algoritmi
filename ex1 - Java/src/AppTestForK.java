@@ -9,13 +9,25 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 
-public class App 
+public class AppTestForK
 {
     private static final Charset ENCODING = StandardCharsets.UTF_8;
 
-    private static final int K_STRING = 0;
-    private static final int K_INTEGER = 0;
-    private static final int K_FLOAT = 0;
+    //private static final int K_STRING = 0;
+    //private static final int K_INTEGER = 0;
+    //private static final int K_FLOAT = 0;
+    
+    /*private static void printArray(ArrayList<Record> array) throws RecordArrayException
+    {
+        Record current = null;
+        int sizeArrary = array.size();
+        
+        for(int i=0; i < sizeArrary; i++)
+        {
+            current = array.get(i);
+            System.out.println("<["+current.getID()+"], "+current.getField_1()+", "+current.getField_2()+", "+current.getField_3()+">\n");
+        }
+    }*/
 
     private static void loadArray(String filepath, ArrayList<Record> array) throws IOException, RecordArrayException
     {
@@ -39,12 +51,31 @@ public class App
         }
     }
     
-    public static void sort(String filepath, Comparator<Record> comparator, int K_FIELD) throws IOException, RecordArrayException
+    public static void sort(String filepath, Comparator<Record> comparator) throws IOException, RecordArrayException
     {
+        int chooseK = 1;
+
+        while(chooseK < 1024000)
+        {
+            System.out.print("I = " +chooseK+ "\n");
+            
             ArrayList<Record> array = new ArrayList<>();
 		    loadArray(filepath, array);
+        
+            long start = System.currentTimeMillis();
+            //System.out.print("Start: " +start / 1000.0+ "\n");
+                Sorting.QuickBinaryInsertionSort(array, comparator, chooseK);
+            long finish = System.currentTimeMillis();
             
-            Sorting.QuickBinaryInsertionSort(array, comparator, K_FIELD);
+            //System.out.print("Finish: " +finish / 1000.0+ "\n");
+                long timeElapsed = finish - start;
+            
+            System.out.println("Time: " +timeElapsed / 1000.0 + " Seconds - "+((timeElapsed / 1000.0) / 60)+ " Minutes \n");
+            System.out.println("\n");
+            
+            chooseK = chooseK*2;
+        }
+        System.out.println("End");
     }
     
     public static void main(String[] args) throws IOException, RecordArrayException, Exception
@@ -52,12 +83,12 @@ public class App
         if(args.length < 1){  throw new Exception("Usage: RecordArrayUsageJava <file_name>"); }
 
         System.out.println ("### SORTING BY STRING ###\n");
-            sort(args[0], new CompareFieldSTRING(), K_STRING);
-
+            sort(args[0], new CompareFieldSTRING());
+        /*
         System.out.println ("### SORTING BY INTEGER ###\n");
-            sort(args[0], new CompareFieldINT(), K_INTEGER);
-
+            sort(args[0], new CompareFieldINT());
+        
         System.out.println ("### SORTING BY FLOATING POINT ###\n");
-            sort(args[0], new CompareFieldFLOAT(), K_FLOAT);        		
+            sort(args[0], new CompareFieldFLOAT()); */      		
 	}  
 }
