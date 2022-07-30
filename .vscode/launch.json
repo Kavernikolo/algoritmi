@@ -2,6 +2,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "java",
+            "name": "Launch App",
+            "request": "launch",
+            "mainClass": "App",
+            "projectName": "algoritmi_5240c022"
+        },
+        {
             "name": "Debug",
             "type": "cppdbg",
             "request": "launch",
