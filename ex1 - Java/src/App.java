@@ -9,9 +9,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.concurrent.TimeUnit;
 
+import record.CompareID;
+
 import record.CompareFieldINT;
 import record.CompareFieldSTRING;
-import record.CompareID;
 import record.CompareFieldFLOAT;
 
 import record.Record;
@@ -25,7 +26,7 @@ public class App
 {
     private static final Charset ENCODING = StandardCharsets.UTF_8;
 
-    private static void printArray(ArrayList<Record> orderedArray )
+    private static void printArray(ArrayList<Record> orderedArray)
     {
         Record currRec =null;
 
@@ -101,16 +102,16 @@ public class App
     {
         if(args.length < 1){  throw new Exception("Usage: RecordArrayUsageJava <file_name>"); }
 
-        System.out.println ("### SORTING BY ID ###\n");
+        System.out.println ("------------ID------------\n");
             sorting(args[0], new CompareID());
 
-        System.out.println ("### SORTING BY STRING ###\n");
+        System.out.println ("------------STRING------------\n");
             sorting(args[0], new CompareFieldSTRING());
 
-        System.out.println ("### SORTING BY INTEGER ###\n");
+        System.out.println ("------------INT------------\n");
             sorting(args[0], new CompareFieldINT());
 
-        System.out.println ("### SORTING BY FLOATING POINT ###\n");
+        System.out.println ("------------FLOAT------------\n");
             sorting(args[0], new CompareFieldFLOAT());     		
 	}  
 }

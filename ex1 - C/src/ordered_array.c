@@ -8,9 +8,6 @@
 
 #define INITIAL_CAPACITY 2
 
-#define TRUE 1
-#define FALSE 0
-
 static size_t binarySearch(OrderedArray *ordered_array, size_t low, size_t high, void *item);
 static void insertionSort(OrderedArray *ordered_array, size_t low, size_t high);
 void quick_sort(OrderedArray *orderedArray, size_t init, size_t end);

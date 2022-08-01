@@ -16,63 +16,6 @@ typedef struct _record
     float field_3;
 }record;
 
-int file_exists(const char* filename)
-{
-    struct stat buffer;
-    int exist = stat(filename,&buffer);
-    
-    if(exist == 0){ return TRUE; }
-    else{ return FALSE; }
-}
-
-void print_array(OrderedArray *array, int index) 
-{
-    printf("\nSave data...\n");
-
-    const char *file_ID_name = "records-ID-ordered.csv";
-    const char *file_field_1_name = "records-field_1-ordered.csv";
-    const char *file_field_2_name = "records-field_2-ordered.csv";
-    const char *file_field_3_name = "records-field_3-ordered.csv";
-
-    if(!file_exists(file_field_1_name))
-    {
-        FILE *file = fopen(file_field_1_name, "w");
-
-        for(int i = 0; i < index; i++)
-        {
-            record *array_element = (record*)ordered_array_get(array, i);
-            fprintf(file, "%d, %s, %d, %f\n", array_element->ID, array_element->field_1, array_element->field_2, array_element->field_3);
-        }
-
-        fclose(file);
-    }
-    else if(!file_exists(file_field_2_name))
-    {
-        FILE *file = fopen(file_field_2_name, "w");
-
-        for(int i = 0; i < index; i++)
-        {
-            record *array_element = (record*)ordered_array_get(array, i);
-            fprintf(file, "%d, %s, %d, %f\n", array_element->ID, array_element->field_1, array_element->field_2, array_element->field_3);
-        }
-
-        fclose(file);
-    }
-    else
-    {
-        FILE *file = fopen(file_field_3_name, "w");
-
-        for(int i = 0; i < index; i++)
-        {
-            record *array_element = (record*)ordered_array_get(array, i);
-            fprintf(file, "%d, %s, %d, %f\n", array_element->ID, array_element->field_1, array_element->field_2, array_element->field_3);
-        }
-
-        fclose(file);
-    }
-}
-
-
 static int compare_field_1(void *r1_p, void *r2_p)
 {
     if(r1_p == NULL)
@@ -134,6 +77,62 @@ static int compare_field_3(void *r1_p, void *r2_p)
     if(rec1_p->field_3 < rec2_p->field_3){ return TRUE; }
     
     return FALSE;
+}
+
+int file_exists(const char* filename)
+{
+    struct stat buffer;
+    int exist = stat(filename,&buffer);
+    
+    if(exist == 0){ return TRUE; }
+    else{ return FALSE; }
+}
+
+void print_array(OrderedArray *array, int index) 
+{
+    printf("\nSave data...\n");
+
+    const char *file_ID_name = "records-ID-ordered.csv";
+    const char *file_field_1_name = "records-field_1-ordered.csv";
+    const char *file_field_2_name = "records-field_2-ordered.csv";
+    const char *file_field_3_name = "records-field_3-ordered.csv";
+
+    if(!file_exists(file_field_1_name))
+    {
+        FILE *file = fopen(file_field_1_name, "w");
+
+        for(int i = 0; i < index; i++)
+        {
+            record *array_element = (record*)ordered_array_get(array, i);
+            fprintf(file, "%d, %s, %d, %f\n", array_element->ID, array_element->field_1, array_element->field_2, array_element->field_3);
+        }
+
+        fclose(file);
+    }
+    else if(!file_exists(file_field_2_name))
+    {
+        FILE *file = fopen(file_field_2_name, "w");
+
+        for(int i = 0; i < index; i++)
+        {
+            record *array_element = (record*)ordered_array_get(array, i);
+            fprintf(file, "%d, %s, %d, %f\n", array_element->ID, array_element->field_1, array_element->field_2, array_element->field_3);
+        }
+
+        fclose(file);
+    }
+    else
+    {
+        FILE *file = fopen(file_field_3_name, "w");
+
+        for(int i = 0; i < index; i++)
+        {
+            record *array_element = (record*)ordered_array_get(array, i);
+            fprintf(file, "%d, %s, %d, %f\n", array_element->ID, array_element->field_1, array_element->field_2, array_element->field_3);
+        }
+
+        fclose(file);
+    }
 }
 
 static void free_array(OrderedArray *array)
