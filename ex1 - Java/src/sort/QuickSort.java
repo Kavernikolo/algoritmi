@@ -5,11 +5,11 @@ import java.util.Comparator;
 
 public class QuickSort
 {
-    private static int K_LIMIT = 2;
+    private static int K_LIMIT = 32;
 
     public static <T> void quickSort(ArrayList<T> array, int init, int end, Comparator<T> comparator) throws SorterException
     {
-        //if((end - init) + 1 <= K_LIMIT){ InsertionSort.insertionSort(array, 0, array.size() - 1, comparator); }
+        if((end - init) + 1 <= K_LIMIT){ InsertionSort.insertionSort(array, init, end, comparator); }
 
         if(init < end)
         {
