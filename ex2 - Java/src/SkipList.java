@@ -20,8 +20,13 @@ public class SkipList<T extends Comparable<T>> implements Header<T>
 
         }
 
-        private SkipNode<T> search(T data, boolean print)
+        private SkipNode<T> search(T data, int level, boolean print)
         {
+            if(print) 
+            {
+                System.out.print("Searching for: " + data + " at ");
+                print(level);
+            }
             SkipNode result = null;
             for(int i = 0; i < LEVELS-1; i++)
             {
@@ -37,6 +42,20 @@ public class SkipList<T extends Comparable<T>> implements Header<T>
             }
             return result;
         }
+
+        void print(int level) 
+        {
+            System.out.print("level " + level + ": [ ");
+            int length = 0;
+            SkipNode<T> current = this.SkipNode.getNext(level);
+            while (current != null) {
+              length++;
+              System.out.print(current.data + " ");
+              current = current.getNext(level);
+            }
+        
+            System.out.println("], length: " + length);
+          }
 
         public void insert(T data)
         {

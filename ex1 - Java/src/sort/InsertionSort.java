@@ -5,7 +5,7 @@ import java.util.Comparator;
 
 public class InsertionSort 
 {
-    public static <T> void insertionSort(ArrayList<T> array, int init, int end, Comparator<T> comparator) throws SorterException
+    public static <T> void insertionSort(ArrayList<T> array, int init, int end, Comparator<T> comparator)
     {
         for(int i = init + 1; i < end; i++)
         {

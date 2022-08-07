@@ -7,76 +7,75 @@
 
 #include "ordered_array.h"
 
-typedef struct _record
+int compare_field_ID(void *element_1, void *element_2)
 {
-    int ID;
-
-    char *field_1;
-    int field_2;
-    float field_3;
-}record;
-
-static int compare_field_1(void *r1_p, void *r2_p)
-{
-    if(r1_p == NULL)
-    {
-        fprintf(stderr, "precedes_string: the first parameter is a null pointer\n");
-            exit(EXIT_FAILURE);
-    }
-    
-    if(r2_p == NULL)
-    {
-        fprintf(stderr, "precedes_string: the second parameter is a null pointer\n");
-            exit(EXIT_FAILURE);
-    }
-
-    record *rec1_p = (record *)r1_p;
-    record *rec2_p = (record *)r2_p;
-    if(strcmp(rec1_p->field_1, rec2_p->field_1) < 0){ return TRUE; }
-
-    return FALSE;
+  record *a = (record *)element_1;
+  record *b = (record *)element_2;
+  return a->ID - b->ID;
 }
 
-static int compare_field_2(void *r1_p, void *r2_p)
+int compare_field_1(void *element_1, void *element_2)
 {
-    if(r1_p == NULL)
-    {
-        fprintf(stderr, "precedes_record_int_field: the first parameter is a null pointer\n");
-            exit(EXIT_FAILURE);
-    }
-
-    if(r2_p == NULL)
-    {
-        fprintf(stderr, "precedes_record_int_field: the second parameter is a null pointer\n");
-            exit(EXIT_FAILURE);
-    }
-
-    record *rec1_p = (record *)r1_p;
-    record *rec2_p = (record *)r2_p;
-    if(rec1_p->field_2 < rec2_p->field_2){ return TRUE; }
-
-    return FALSE;
+  record *a = (record *)element_1;
+  record *b = (record *)element_2;
+  return strcmp(a->field_1, b->field_1);
 }
 
-static int compare_field_3(void *r1_p, void *r2_p)
+int compare_field_2(void *element_1, void *element_2)
 {
-    if(r1_p == NULL)
-    {
-        fprintf(stderr, "precedes_record_int_field: the first parameter is a null pointer\n");
-            exit(EXIT_FAILURE);
-    }
+  record *a = (record *)element_1;
+  record *b = (record *)element_2;
+  return a->field_2 - b->field_2;
+}
 
-    if(r2_p == NULL)
-    {
-        fprintf(stderr, "precedes_record_int_field: the second parameter is a null pointer\n");
-            exit(EXIT_FAILURE);
-    }
+int compare_field_3(void *element_1, void *element_2)
+{
+  record *a = (record *)element_1;
+  record *b = (record *)element_2;
+  if (a->field_3 > b->field_3)
+  {
+    return 1;
+  }
+  else if (a->field_3 < b->field_3)
+  {
+    return -1;
+  }
+  else
+  {
+    return 0;
+  }
+}
 
-    record *rec1_p = (record *)r1_p;
-    record *rec2_p = (record *)r2_p;
-    if(rec1_p->field_3 < rec2_p->field_3){ return TRUE; }
-    
-    return FALSE;
+int compare_int(void *element_1, void *element_2)
+{
+  int *a = (int *)element_1;
+  int *b = (int *)element_2;
+  return (*a) - (*b);
+}
+
+int compare_float(void *element_1, void *element_2)
+{
+  float *a = (float *)element_1;
+  float *b = (float *)element_2;
+  if (*a > *b)
+  {
+    return 1;
+  }
+  else if (*a < *b)
+  {
+    return -1;
+  }
+  else
+  {
+    return 0;
+  }
+}
+
+int compare_string(void *element_1, void *element_2)
+{
+  char *a = (char *)element_1;
+  char *b = (char *)element_2;
+  return strcmp(a, b);
 }
 
 int file_exists(const char* filename)
@@ -88,16 +87,55 @@ int file_exists(const char* filename)
     else{ return FALSE; }
 }
 
+void isOrdered(OrderedArray *array, int (*compare)(void *, void *))
+{
+    int sortingIsCorrect = TRUE;
+
+    int i = 0;
+
+    while (sortingIsCorrect == TRUE && i < array->size)
+    {        
+        if((*compare)(ordered_array_get(array, i), ordered_array_get(array, i++)) <= 0){ i++; }
+        else{sortingIsCorrect = FALSE; }
+    }
+
+    i = 0;
+    while (i < array->size)
+    {
+        record *array_element = (record*)ordered_array_get(array, i);
+            printf("%d, %s, %d, %f\n", array_element->ID, array_element->field_1, array_element->field_2, array_element->field_3);
+        
+        i++;
+    }
+    
+    
+    if(sortingIsCorrect == TRUE){printf("The sorting is correct");}
+    else{printf("The sorting is wrong");}
+}
+
 void print_array(OrderedArray *array, int index) 
 {
     printf("\nSave data...\n");
 
     const char *file_ID_name = "records-ID-ordered.csv";
+    
     const char *file_field_1_name = "records-field_1-ordered.csv";
     const char *file_field_2_name = "records-field_2-ordered.csv";
     const char *file_field_3_name = "records-field_3-ordered.csv";
 
-    if(!file_exists(file_field_1_name))
+    if(!file_exists(file_ID_name))
+    {
+        FILE *file = fopen(file_ID_name, "w");
+
+        for(int i = 0; i < index; i++)
+        {
+            record *array_element = (record*)ordered_array_get(array, i);
+            fprintf(file, "%d, %s, %d, %f\n", array_element->ID, array_element->field_1, array_element->field_2, array_element->field_3);
+        }
+
+        fclose(file);
+    }
+    else if(!file_exists(file_field_1_name))
     {
         FILE *file = fopen(file_field_1_name, "w");
 
@@ -227,13 +265,14 @@ static void test_with_comparison_function(const char *file_name, int (*compare)(
     time_taken = 0;
 
     gettimeofday(&start, NULL);
-        quick_binary_insertion_sort(array);
+        quick_binary_insertion_sort(array, compare);
     gettimeofday(&end, NULL);
     time_taken = (double)end.tv_sec + (double)end.tv_usec / 1e6 - (double)start.tv_sec - (double)start.tv_usec / 1e6;
 
     printf("Array ordered in: %fs\n\n", time_taken);
 
     print_array(array, array->size);
+    //isOrdered(array, compare);
 
     free_array(array);
 }
@@ -245,6 +284,9 @@ int main(int argc, char const *argv[])
         printf("Usage: ordered_array_main <file_name>\n");
         exit(EXIT_FAILURE);
     }
+
+    printf("\n------------ID------------\n");
+        test_with_comparison_function(argv[1], compare_field_ID);
 
     printf("\n------------STRING------------\n");
         test_with_comparison_function(argv[1], compare_field_1);

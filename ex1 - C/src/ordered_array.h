@@ -11,11 +11,18 @@ typedef struct _OrderedArray
 
     size_t size;
     size_t capacity;
-  
-    int (*precedes)(void *, void *);
 }OrderedArray;
 
-OrderedArray *ordered_array_create(int (*precedes)(void *, void *));
+typedef struct _record
+{
+    int ID;
+
+    char *field_1;
+    int field_2;
+    float field_3;
+}record;
+
+OrderedArray *ordered_array_create(int (*compare)(void *, void *));
 
 int ordered_array_is_empty(OrderedArray *);
 
@@ -27,6 +34,4 @@ void *ordered_array_get(OrderedArray *, size_t i);
 
 void ordered_array_free_memory(OrderedArray *);
 
-void merge_binary_insertion_sort(OrderedArray *);
-
-void quick_binary_insertion_sort(OrderedArray *);
+void quick_binary_insertion_sort(OrderedArray *, int (*compare)(void *, void *));

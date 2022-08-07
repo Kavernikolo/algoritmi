@@ -7,7 +7,7 @@ public class QuickSort
 {
     private static int K_LIMIT = 32;
 
-    public static <T> void quickSort(ArrayList<T> array, int init, int end, Comparator<T> comparator) throws SorterException
+    public static <T> void quickSort(ArrayList<T> array, int init, int end, Comparator<T> comparator)
     {
         if((end - init) + 1 <= K_LIMIT){ InsertionSort.insertionSort(array, init, end, comparator); }
 
@@ -22,18 +22,23 @@ public class QuickSort
     
     public static <T> int partition(ArrayList<T> array, int init, int end, Comparator<T> comparator)
     {
-        int pivot = (init / 2) + (end /2);
+        int pivot = (init / 2) + (end / 2);
 
         T value = array.get(pivot);
 
-        while(init < end)
-        {
-            while(comparator.compare(array.get(init), value) < 0){ init++; };
-            while(comparator.compare(array.get(end), value) > 0){ end--; };
+        init--;
+        end++;
 
+        //while(init < end)
+        while(true)
+        {
+            do init++; while(comparator.compare(array.get(init), value) < 0);//{ init++; };
+            do end--; while(comparator.compare(array.get(end), value) > 0);//{ end--; };
+
+            if(init >= end){ return end; }
             swap(array, init, end);
         }
-        return init;
+        //return init;
     }
 
     public static <T> void swap(ArrayList<T> array, int i, int j)
