@@ -9,7 +9,7 @@ public class QuickSort
 
     public static <T> void quickSort(ArrayList<T> array, int init, int end, Comparator<T> comparator)
     {
-        if((end - init) + 1 <= K_LIMIT){ InsertionSort.insertionSort(array, init, end, comparator); }
+        //if((end - init) + 1 <= K_LIMIT){ InsertionSort.insertionSort(array, init, end, comparator); }
 
         if(init < end)
         {
@@ -29,7 +29,6 @@ public class QuickSort
         init--;
         end++;
 
-        //while(init < end)
         while(true)
         {
             do init++; while(comparator.compare(array.get(init), value) < 0);//{ init++; };

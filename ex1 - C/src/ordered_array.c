@@ -138,14 +138,14 @@ void quick_binary_insertion_sort(OrderedArray *ordered_array, int (*compare)(voi
         fprintf(stderr, "merge_binary_insertion_sort: ordered_array parameter cannot be NULL");
             exit(EXIT_FAILURE);
     }
-
-    if((ordered_array->size) <= K){ insertionSort(ordered_array, 0, (ordered_array->size) - 1, compare); }
-    else{ quick_sort(ordered_array, 0, (ordered_array->size) - 1, compare); }
+    quick_sort(ordered_array, 0, (ordered_array->size) - 1, compare);
+    /*if((ordered_array->size) <= K){ insertionSort(ordered_array, 0, (ordered_array->size) - 1, compare); }
+    else{ insertionSort(ordered_array, 0, (ordered_array->size) - 1, compare); }*/
 }
 
 void quick_sort(OrderedArray *ordered_array, size_t init, size_t end, int (*compare)(void *, void *))
 {
-    if(((end - init) + 1) <= K){ insertionSort(ordered_array, init, end, compare); }
+    //if(((end - init) + 1) <= K){ insertionSort(ordered_array, init, end, compare); }
 
     if(init < end)
     {
@@ -158,7 +158,7 @@ void quick_sort(OrderedArray *ordered_array, size_t init, size_t end, int (*comp
 
 static size_t partition(OrderedArray *ordered_array, size_t init, size_t end, int (*compare)(void *, void *))
 {
-    size_t pivot = (init / 2) + (end / 2);
+    size_t pivot = (init + ((end - init) / 2));
     
     void *element = ordered_array_get(ordered_array, pivot);
 
@@ -179,13 +179,13 @@ static size_t binarySearch(OrderedArray *ordered_array, void *element, size_t in
 {
     if(end <= init)
     {
-        if((*compare)(ordered_array_get(ordered_array, init), element) < 0){ return init; }
+        if((*compare)(element, ordered_array_get(ordered_array, init)) < 0){ return init; }
         else{ return init + 1; }
     }
 
-    size_t middle = (init / 2) + (end /2);
+    size_t middle = (init + ((end - init) / 2));
 
-    size_t compare_element = (*compare)(ordered_array_get(ordered_array, middle), element);
+    size_t compare_element = (*compare)(element, ordered_array_get(ordered_array, middle));
 
     if(compare_element < 0){ return binarySearch(ordered_array, element, init, middle - 1, compare); }
     else if(compare_element > 0){ return binarySearch(ordered_array, element, middle + 1, end, compare); }
@@ -197,14 +197,12 @@ static void insertionSort(OrderedArray *ordered_array, size_t init, size_t end, 
     for (size_t i = init + 1; i < end; i++)
     {
         size_t j = i - 1;
-
         void *element = ordered_array_get(ordered_array, i);
 
         size_t gps = binarySearch(ordered_array, element, init, j, compare);
-
-        while(j >= gps && ((*compare)(ordered_array_get(ordered_array, j), element) > 0))
+        while(j >= gps && ((*compare)(element, ordered_array_get(ordered_array, j)) < 0))
         {
-            ordered_array_set(ordered_array, j+1, ordered_array_get(ordered_array, j));
+            ordered_array_set(ordered_array, j + 1, ordered_array_get(ordered_array, j));
             j--;
         }
         ordered_array_set(ordered_array, j + 1, element);

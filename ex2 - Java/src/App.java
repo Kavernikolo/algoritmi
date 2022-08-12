@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -7,8 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
+
+import skipList.SkipList;
 
 public class App
 {
@@ -16,6 +16,7 @@ public class App
 
     private static void loadDictionary(String filepath, SkipList<String> list) throws IOException
     {
+        System.out.println("Loading dictionary...");
         Path inputFilePath = Paths.get(filepath);
         
         try(BufferedReader fileInputReader = Files.newBufferedReader(inputFilePath, ENCODING))
@@ -26,11 +27,9 @@ public class App
             long startTime = System.nanoTime();
             while((line = fileInputReader.readLine()) != null)
             {
-                String[] lineElements = line.split(",");
-
-                String current = lineElements[1];
+                String current = line;
                 list.insert(current);
-
+                
                 lineCounter++;
             }
             long endTime = System.nanoTime();
@@ -40,7 +39,7 @@ public class App
         }
     }
 
-    private static void loadCorrectme(String filepath, ArrayList<String> array) throws IOException
+    private static void loadCorrectme(String filepath, ArrayList<String> array, SkipList<String> list) throws IOException
     {
         Path inputFilePath = Paths.get(filepath);
         
@@ -52,10 +51,7 @@ public class App
             long startTime = System.nanoTime();
             while((line = fileInputReader.readLine()) != null)
             {
-                String[] lineElements = line.split(",");
-
-                String current = lineElements[1];
-                array.add(current);
+                array.add(line);
 
                 lineCounter++;
             }
@@ -68,23 +64,19 @@ public class App
 
     public static void useSkipList(String dictionaryPath, String correctmePath) throws IOException
     {
-        SkipList<String> list = new SkipList<>();
+        SkipList<String> list = new SkipList<String>();
             loadDictionary(dictionaryPath, list);
         
-        ArrayList<String> array = new ArrayList<>();
-            loadCorrectme(correctmePath, array);
+        ArrayList<String> array = new ArrayList<String>();
+            loadCorrectme(correctmePath, array, list);
 
-        int i = 0;
-        while(i < array.size() - 1)
-        {
-            list.search(array.get(i));
-            i++;
-        }
+            int i = 0;
+            System.out.println(list.find(array.get(i)));
         
     }
     public static void main(String[] args) throws Exception
     {
         if(args.length < 2){  throw new Exception("Usage: App <dictionary.txt> <correctme.txt>"); }
-
+            useSkipList(args[0], args[1]);
     }
 }

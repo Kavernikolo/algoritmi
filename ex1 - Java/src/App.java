@@ -95,7 +95,7 @@ public class App
             System.out.println("File ordered in: " + TimeUnit.NANOSECONDS.toSeconds(endTime - startTime) + " SECONDS\n");
             System.out.println("Order check...\n");
                 isOrdered(array, comparator);
-            //printArray(array);
+            printArray(array);
     }
     
     public static void main(String[] args) throws IOException, RecordException, Exception
