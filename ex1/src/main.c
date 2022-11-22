@@ -132,7 +132,7 @@ static void test_with_comparison_function(const char *file_name, const char *fil
         printf("\nArray ordered in: %fs\n\n", time_taken);
 
     gettimeofday(&start, NULL);
-        wirte(file_save_name, array);
+        write(file_save_name, array);
     gettimeofday(&end, NULL);
     time_taken = (double)end.tv_sec + (double)end.tv_usec / 1e6 - (double)start.tv_sec - (double)start.tv_usec / 1e6;
         printf("\nArray saved in: %fs\n\n", time_taken);
