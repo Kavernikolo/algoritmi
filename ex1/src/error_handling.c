@@ -1,7 +1,7 @@
-#include"../header/error_handling.h"
+#include "../header/error_handling.h"
 
-#include<stdlib.h>
-#include<stdio.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 void exception(char *message)
 {

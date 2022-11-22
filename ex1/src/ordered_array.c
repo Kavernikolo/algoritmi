@@ -1,7 +1,7 @@
-#include"../header/ordered_array.h"
+#include "../header/ordered_array.h"
 
-#include<stdlib.h>
-#include<stdio.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 //Initial capacity for the array
 #define INITIAL_CAPACITY 2

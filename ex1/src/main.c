@@ -18,7 +18,7 @@ int file_exists(const char *filename)
     else{ return 0; }
 }
 
-void wirte(const char *filepath, OrderedArray *array)
+void write(const char *filepath, OrderedArray *array)
 {
     if(file_exists(filepath)){ remove(filepath); }
     
