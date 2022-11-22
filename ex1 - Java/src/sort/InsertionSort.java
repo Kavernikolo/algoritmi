@@ -7,19 +7,20 @@ public class InsertionSort
 {
     public static <T> void insertionSort(ArrayList<T> array, int init, int end, Comparator<T> comparator)
     {
-        for(int i = init + 1; i < end; i++)
+        for(int i = init + 1; i <= end; i++)
         {
             int j = i - 1;
-            T value = array.get(i);
+
+            T tmp = array.get(i);
             
-            int gps = BinarySearch.binarySearch(array, value, init, j, comparator);            
-            while(j >= gps && ((comparator.compare(value, array.get(j))) < 0))
+            int toInsert = BinarySearch.binarySearch(array, init, j, tmp, comparator);
+
+            while(j >= toInsert && (comparator.compare(array.get(j), tmp) > 0))
             {
                 array.set(j + 1, array.get(j));
                 j--;
             }
-            
-            array.set((j + 1), value);
+            array.set(j + 1, tmp);
         }
     }
 }

@@ -1,6 +1,6 @@
 ## Esercizio 3
 
-### Linguaggio richiesto: C
+### Linguaggio richiesto: Java
 
 ### Testo
 

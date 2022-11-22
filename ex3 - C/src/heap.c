@@ -1,40 +1,41 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include<string.h>
 
-#include"heap.h"
-
+#include"../include/heap.h"
 
 int compare_int(void *element_1, void *element_2)
 {
-  int *a = (int *)element_1;
-  int *b = (int *)element_2;
-  return (*a) - (*b);
+    int *a = (int *)element_1;
+    int *b = (int *)element_2;
+  
+    return (*a) - (*b);
 }
 
 int compare_string(void *element_1, void *element_2)
 {
-  char *a = (char *)element_1;
-  char *b = (char *)element_2;
-  return strcmp(a, b);
+    char *a = (char *)element_1;
+    char *b = (char *)element_2;
+  
+    return strcmp(a, b);
 }
 
 int compare_float(void *element_1, void *element_2)
 {
-  float *a = (float *)element_1;
-  float *b = (float *)element_2;
-  if (*a > *b)
-  {
-    return 1;
-  }
-  else if (*a < *b)
-  {
-    return -1;
-  }
-  else
-  {
-    return 0;
-  }
+    float *a = (float *)element_1;
+    float *b = (float *)element_2;
+  
+    if (*a > *b)
+    {
+        return 1;
+    }
+    else if (*a < *b)
+    {
+        return -1;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 arrayList *array_list_create(int (*compare)(void *, void *))
@@ -136,11 +137,6 @@ void *array_list_get(arrayList *array_list, size_t i)
     return (array_list->array)[i];
 }
 
-void array_list_set(arrayList *array_list, size_t to, void *element)
-{
-    array_list->array[to] = element;
-}
-
 void array_list_free_memory(arrayList *array_list)
 {
     if(array_list == NULL)
@@ -153,116 +149,89 @@ void array_list_free_memory(arrayList *array_list)
     free(array_list);
 }
 
+/* --- MIN HEAP --- */
 
-void bubbleUp(arrayList *array_list)
-{
-    size_t index = array_list_size(array_list) - 1;
+//Creazione di uno heap minimo vuoto - O(1) -> fatto;
 
-    while(hasParent(index) == TRUE && (array_list->compare(array_list_get(array_list, getParentIndex(index)), array_list_get(array_list, index)) > 0))
-    {
-        swap(array_list, index, getParentIndex(index));
+//Inserimento di un elemento - O(log n) -> fatto;
 
-        index = getParentIndex(index);
-    }
+//Restituzione della dimensione dello heap - O(1) - fatto;
 
-}
-
+//Restituzione del genitore di un elemento - O(1);
 int getParentIndex(int i){ return (i/2); }
-//void getParentElement(arrayList *array_list, int i){ return array_list_get(array_list, i); }
-int hasParent(int i){ return i > 1;}
+int getParentElement(arrayList *array_list, int i){ return array_list_get(array_list, getParentIndex(i)); }
 
-int getLeftIndex(int i){ return (2 * i); }
-//void getLeftElement(arrayList *array_list, int i){ return array_list_get(array_list, i); }
-int hasLeftChild(arrayList *array_list, int i){ return getLeftIndex(i) < array_list_size(array_list) - 1; }
+//Restituzione del figlio sinistro di un elemento - O(1);
+int getLeftIndex(int i){ return (i * 2); }
+int getLeftElement(arrayList *array_list, int i){ return array_list_get(array_list, getLeftIndex(i)); }
 
-int getRightIndex(int i){ return (2*1) + 1; }
-//void getRightElement(arrayList *array_list, int i){ return array_list_get(array_list, i); }
-int hasRightChild(arrayList *array_list, int i){ return getLeftIndex(i) <= array_list_size(array_list) - 1; }
 
+//Restituzione del figlio destro di un elemento - O(1);
+int getRightIndex(int i){ return (i * 2) + 1; }
+int getRightElement(arrayList *array_list, int i){ return array_list_get(array_list, getRightIndex(i)); }
+
+
+//Estrazione dell'elemento con valore minimo - O(log n);
 void extractMin(arrayList *array_list)
 {
-    size_t size = array_list_size(array_list);
-    array_list->array[ROOT] = array_list->array[size - 1];
+    void *minElement = array_list_get(array_list, ROOT);
 
+    size_t size = array_list_size(array_list);
+
+    array_list->array[ROOT] = array_list->array[size - 1];
     array_list->size = size - 1;
 
     bubbleDown(array_list);
 }
 
-void bubbleDown(arrayList *array_list)
+void bubbleUp(arrayList *array_list)
 {
     size_t size = array_list_size(array_list);
+
+    while(size > 1 && array_list->compare(getParentElement(array_list, size), array_list_get(array_list, size)) > 0)
+    {
+        swap(array_list, size, getParentIndex(size));
+        size = getParentIndex(size);
+    }
+}
+
+void bubbleDown(arrayList *array_list)
+{
     size_t index = ROOT;
 
-    size_t leftChild;
-    size_t rightChild;
-
-    size_t minIndex;
-
-    void *element;
+    size_t leftIndex;
+    size_t rightIndex;
+    
+    size_t min;
 
     while(TRUE)
     {
-        leftChild = getLeftIndex(index);
-        rightChild = getRightIndex(index);
+        leftIndex = getLeftIndex(index);
+        rightIndex = getRightIndex(index);
 
-        minIndex = index;
+        min = index;
 
-        if(size > leftChild && (array_list->compare(array_list_get(array_list, minIndex), array_list_get(array_list, leftChild)) > 0))
+        if(array_list_size(array_list) > leftIndex && (array_list->compare(array_list_get(array_list, index), array_list_get(array_list, leftIndex) > 0)))
         {
-            minIndex = leftChild;
+            min = leftIndex;
         }
 
-        if(size > rightChild && (array_list->compare(array_list_get(array_list, minIndex), array_list_get(array_list, rightChild)) > 0))
+        if(array_list_size(array_list) > rightIndex && (array_list->compare(array_list_get(array_list, index), array_list_get(array_list, rightIndex) > 0)))
         {
-            minIndex = rightChild;
+            min = rightIndex;
         }
 
-        if(index != minIndex){ swap(array_list, index, minIndex); }
+        if(index != min){ swap(array_list, index, min); }
         else{ return; }
     }
     
 }
 
-static void swap(arrayList *array_list, int x, int y)
+static void swap(arrayList *array, int x, int y)
 {
-    void *tmp = array_list_get(array_list, x);
-    (array_list->array)[x] = array_list_get(array_list, y);
-    (array_list->array)[y] = tmp;
+    void *tmp = ordered_array_get(array, x);
+    ordered_array_set(array, x, ordered_array_get(array, y));
+    ordered_array_set(array, y, tmp);
 }
 
-void decreaseElement(arrayList *array_list, void *source, void *destination)
-{
-    size_t size = array_list_size(array_list);
-
-    size_t gps = binary_search(array_list, source, 0, size);
-    
-    if(gps == ROOT && (array_list->compare(destination, array_list_get(array_list, gps)) < 0))
-    {
-        array_list->array[gps] = destination;
-        bubbleDown(array_list);
-    }
-    else if(array_list->compare(destination, array_list_get(array_list, gps)) < 0)
-    {
-            array_list->array[gps] = destination;
-            bubbleUp(array_list);
-    }
-    else{ return; }
-}
-
-static size_t binary_search(arrayList *array_list, void *element, size_t init, size_t end)
-{
-    if(end <= init)
-    {   
-        if((array_list->compare(element, array_list_get(array_list, init)) < 0)){ return init; }
-        else{ return init + 1; }
-    }
-
-    size_t middle = (init + ((end - init) / 2));
-        
-    size_t compare_element = ((array_list->compare(element, array_list_get(array_list, middle))));
-
-    if(compare_element < 0){ return binary_search(array_list, element, init, middle - 1); }
-    else if(compare_element > 0){ return binary_search(array_list, element, middle + 1, end); }
-    else return middle;
-}
+//Diminuzione del valore di un elemento - O(log n).

@@ -3,22 +3,21 @@ package sort;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class BinarySearch 
+public class BinarySearch
 {
-    public static <T> int binarySearch(ArrayList<T> array, T value, int init, int end, Comparator<T> comparator)
+    public static <T> int binarySearch(ArrayList<T> array, int init, int end, T value, Comparator<T> comparator)
     {
-        if(end <= init)
+        while(init <= end)
         {
-            if(comparator.compare(value, array.get(init)) < 0){ return init; }
-            else{ return init + 1;}
+            int middle = (init + (end - init) / 2);
+
+            int equals = (comparator.compare(value, array.get(middle)));
+
+            if(equals == 0){ return middle++; }
+            else if(equals < 0){ init = init + (middle + 1); }
+            else{ end = end + (middle - 1); }
         }
 
-        int middle = (init + ((end - init) / 2));
-
-        int compare = comparator.compare(value, array.get(middle));
-
-        if(compare < 0){ return binarySearch(array, value, init, middle - 1, comparator); }
-        else if(compare > 0){ return binarySearch(array, value,middle + 1, end, comparator); }
-        else return middle;
-    }   
+        return init;
+    }
 }
